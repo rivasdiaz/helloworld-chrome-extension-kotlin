@@ -1,0 +1,20 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}
+
+task clean(type: Delete) {
+    delete 'build'
+}
+
+task copyWeb(type: Copy) {
+    from 'src/main/web'
+    into 'build/extension'
+}
+
+task crx {
+    dependsOn copyWeb
+}
+
+task assemble {
+    dependsOn crx
+}
