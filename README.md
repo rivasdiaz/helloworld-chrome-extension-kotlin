@@ -4,7 +4,11 @@ Chrome Extension sample from Google's Getting Started guide.
 
 Documentation [here](https://developer.chrome.com/extensions/getstarted).
 
-This version of the code is copied from the original Google example.
+This version of the code is as rewriting of the original Google example using Kotlin.
+Code is as close as possible as the original code.
+Original comments are kept in the equivalent place.
+
+Original version in JavaScript can be seen [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/52fdf0db02fb636007d3cac652b593ebfc0d78c1).
 
 ##### Building
 
