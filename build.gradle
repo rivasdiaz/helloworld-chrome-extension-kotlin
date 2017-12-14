@@ -1,9 +1,47 @@
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+buildscript {
+    ext {
+        kotlin_version = '1.2.0'
+        kotlin_frontend_version = '0.0.26'
+    }
+
+    repositories {
+        jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:$kotlin_frontend_version"
+    }
 }
 
-task clean(type: Delete) {
-    delete 'build'
+apply plugin: 'kotlin2js'
+apply plugin: 'org.jetbrains.kotlin.frontend'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+}
+
+compileKotlin2Js {
+    kotlinOptions {
+        moduleKind = 'commonjs'
+        sourceMap = true
+    }
+}
+
+kotlinFrontend {
+    webpackBundle {
+        bundleName = 'popup'
+        contentPath = file('src/main/web')
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
 }
 
 task copyWeb(type: Copy) {
@@ -11,10 +49,16 @@ task copyWeb(type: Copy) {
     into 'build/extension'
 }
 
-task crx {
-    dependsOn copyWeb
+task copyBundle(type: Copy) {
+    dependsOn 'bundle'
+    from ('build/bundle') {
+        rename '(.*)\\.bundle.js', '$1.js'
+    }
+    into 'build/extension'
 }
 
-task assemble {
-    dependsOn crx
+task crx {
+    dependsOn copyWeb, copyBundle
 }
+
+assemble.dependsOn crx
