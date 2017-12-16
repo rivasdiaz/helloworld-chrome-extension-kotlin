@@ -1,14 +1,11 @@
 package helloworld
 
+import chrome.storage.getSync
 import chrome.tabs.ExecuteScriptDetails
 import chrome.tabs.QueryInfo
+import chrome.tabs.querySync
 import org.w3c.dom.HTMLSelectElement
 import kotlin.browser.document
-import kotlin.js.Console
-
-fun Console.assert(expr: Boolean, msg: String) {
-    if (!expr) error(msg)
-}
 
 /**
  * Get the current URL.
@@ -16,48 +13,31 @@ fun Console.assert(expr: Boolean, msg: String) {
  * @param callback called when the URL of the current tab
  *   is found.
  */
-fun getCurrentTabUrl(callback: (String) -> Unit) {
-    // Query filter to be passed to chrome.tabs.query - see
-    // https://developer.chrome.com/extensions/tabs#method-query
-    val queryInfo = QueryInfo {
-        active = true
-        currentWindow = true
-    }
-
-    chrome.tabs.query(
-            queryInfo = queryInfo,
-            callback = { tabs ->
-                // chrome.tabs.query invokes the callback with a list of tabs that match the
-                // query. When the popup is opened, there is certainly a window and at least
-                // one tab, so we can safely assume that |tabs| is a non-empty array.
-                // A window can only have one active tab at a time, so the array consists of
-                // exactly one tab.
-                val tab = tabs[0]
-
-                // A tab is a plain object that provides information about the tab.
-                // See https://developer.chrome.com/extensions/tabs#type-Tab
-                val url = tab.url
-                // tab.url is only available if the "activeTab" permission is declared.
-                // If you want to see the URL of other tabs (e.g. after removing active:true
-                // from |queryInfo|), then the "tabs" permission is required to see their
-                // "url" properties.
-                if (url != null) {
-                    callback(url)
-                } else {
-                    throw RuntimeException("tab.url should be a string")
-                }
+fun getCurrentTabUrlAsync() =
+        async {
+            // Query filter to be passed to chrome.tabs.query - see
+            // https://developer.chrome.com/extensions/tabs#method-query
+            val queryInfo = QueryInfo {
+                active = true
+                currentWindow = true
             }
-    )
+            val tabs = querySync(queryInfo)
+            // chrome.tabs.query invokes the callback with a list of tabs that match the
+            // query. When the popup is opened, there is certainly a window and at least
+            // one tab, so we can safely assume that |tabs| is a non-empty array.
+            // A window can only have one active tab at a time, so the array consists of
+            // exactly one tab.
+            val tab = tabs[0]
 
-    // Most methods of the Chrome extension APIs are asynchronous. This means that
-    // you CANNOT do something like this:
-    //
-    // var url;
-    // chrome.tabs.query(queryInfo, (tabs) => {
-    //   url = tabs[0].url;
-    // });
-    // alert(url); // Shows "undefined", because chrome.tabs.query is async.
-}
+            // A tab is a plain object that provides information about the tab.
+            // See https://developer.chrome.com/extensions/tabs#type-Tab
+            val url = tab.url
+            // tab.url is only available if the "activeTab" permission is declared.
+            // If you want to see the URL of other tabs (e.g. after removing active:true
+            // from |queryInfo|), then the "tabs" permission is required to see their
+            // "url" properties.
+            url ?: throw RuntimeException("tab.url should be a string")
+        }
 
 /**
  * Change the background color of the current page.
@@ -85,17 +65,14 @@ fun changeBackgroundColor(color: String) {
  * @param callback called with the saved background color for
  *     the given url on success, or a falsy value if no color is retrieved.
  */
-fun getSavedBackgroundColor(url: String, callback: (String?) -> Unit) {
-    // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-    // for chrome.runtime.lastError to ensure correctness even when the API call
-    // fails.
-    chrome.storage.sync.get(
-            url,
-            { items ->
-                callback(if (chrome.runtime.lastError != null) null else items[url] as? String)
-            }
-    )
-}
+fun getSavedBackgroundColorAsync(url: String) =
+        async {
+            // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
+            // for chrome.runtime.lastError to ensure correctness even when the API call
+            // fails.
+            val items = chrome.storage.sync.getSync(url)
+            items[url] as? String
+        }
 
 /**
  * Sets the given background color for url.
@@ -124,18 +101,16 @@ fun main(args: Array<String>) {
     document.addEventListener(
             type = "DOMContentLoaded",
             callback = {
-                getCurrentTabUrl { url ->
+                launch {
+                    val url = getCurrentTabUrlAsync().await()
                     val dropdown = document.getElementById("dropdown") as HTMLSelectElement
-
                     // Load the saved background color for this page and modify the dropdown
                     // value, if needed.
-                    getSavedBackgroundColor(url) { savedColor ->
-                        if (savedColor != null) {
-                            changeBackgroundColor(savedColor)
-                            dropdown.value = savedColor
-                        }
+                    val savedColor = getSavedBackgroundColorAsync(url).await()
+                    if (savedColor != null) {
+                        changeBackgroundColor(savedColor)
+                        dropdown.value = savedColor
                     }
-
                     // Ensure the background color is changed and saved when the dropdown
                     // selection changes.
                     dropdown.addEventListener(
