@@ -26,6 +26,12 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
 }
 
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 compileKotlin2Js {
     kotlinOptions {
         moduleKind = 'commonjs'
