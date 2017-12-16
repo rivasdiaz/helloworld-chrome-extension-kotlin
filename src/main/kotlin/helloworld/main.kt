@@ -98,27 +98,21 @@ fun saveBackgroundColor(url: String, color: String) {
 // chrome.storage.local allows the extension data to be synced across multiple
 // user devices.
 fun main(args: Array<String>) {
-    document.addEventListener(
-            type = "DOMContentLoaded",
-            callback = {
-                launch {
-                    val url = getCurrentTabUrlAsync().await()
-                    val dropdown = document.getElementById("dropdown") as HTMLSelectElement
-                    // Load the saved background color for this page and modify the dropdown
-                    // value, if needed.
-                    val savedColor = getSavedBackgroundColorAsync(url).await()
-                    if (savedColor != null) {
-                        changeBackgroundColor(savedColor)
-                        dropdown.value = savedColor
-                    }
-                    // Ensure the background color is changed and saved when the dropdown
-                    // selection changes.
-                    dropdown.addEventListener(
-                            type = "change",
-                            callback = {
-                                changeBackgroundColor(dropdown.value)
-                                saveBackgroundColor(url, dropdown.value)
-                            })
-                }
-            })
+    document.onContentLoadedEventAsync {
+        val url = getCurrentTabUrlAsync().await()
+        val dropdown = document.getElementById("dropdown") as HTMLSelectElement
+        // Load the saved background color for this page and modify the dropdown
+        // value, if needed.
+        val savedColor = getSavedBackgroundColorAsync(url).await()
+        if (savedColor != null) {
+            changeBackgroundColor(savedColor)
+            dropdown.value = savedColor
+        }
+        // Ensure the background color is changed and saved when the dropdown
+        // selection changes.
+        dropdown.onChangeEvent {
+            changeBackgroundColor(dropdown.value)
+            saveBackgroundColor(url, dropdown.value)
+        }
+    }
 }
