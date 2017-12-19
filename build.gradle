@@ -40,6 +40,9 @@ compileKotlin2Js {
 }
 
 kotlinFrontend {
+    npm {
+        dependency 'webextension-polyfill'
+    }
     webpackBundle {
         bundleName = 'popup'
         contentPath = file('src/main/web')
@@ -55,6 +58,14 @@ task copyWeb(type: Copy) {
     into 'build/extension'
 }
 
+task copyBrowserPolyfill(type: Copy) {
+    dependsOn 'bundle'
+    from ('build/node_modules/webextension-polyfill/dist') {
+        include 'browser-polyfill.min.js'
+    }
+    into 'build/extension'
+}
+
 task copyBundle(type: Copy) {
     dependsOn 'bundle'
     from ('build/bundle') {
@@ -63,8 +74,17 @@ task copyBundle(type: Copy) {
     into 'build/extension'
 }
 
-task crx {
-    dependsOn copyWeb, copyBundle
+task prepareExtension {
+    dependsOn copyWeb, copyBundle, copyBrowserPolyfill
 }
 
-assemble.dependsOn crx
+task zipExtension(type: Zip) {
+    dependsOn prepareExtension
+    from 'build/extension'
+}
+
+task extension {
+    dependsOn zipExtension
+}
+
+assemble.dependsOn extension
