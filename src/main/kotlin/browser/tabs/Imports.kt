@@ -1,13 +1,14 @@
-@file:JsQualifier("chrome.tabs")
+@file:JsQualifier("browser.tabs")
 
-package chrome.tabs
+package browser.tabs
 
-external fun query(queryInfo: QueryInfo, callback: (Array<Tab>) -> Unit)
+import kotlin.js.Promise
+
+external fun query(queryInfo: QueryInfo): Promise<Array<Tab>>
 external fun executeScript(
         tabId: Int? = definedExternally,
-        details: ExecuteScriptDetails,
-        callback: ((Array<dynamic>) -> Unit)? = definedExternally
-)
+        details: ExecuteScriptDetails
+): Promise<Array<dynamic>>
 
 external val TAB_ID_NONE: Int = definedExternally
 

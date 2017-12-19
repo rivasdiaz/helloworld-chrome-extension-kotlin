@@ -1,4 +1,4 @@
-package chrome.tabs
+package browser.tabs
 
 const val MUTED_INFO_REASON__USER = "user"
 const val MUTED_INFO_REASON__CAPTURE = "capture"
