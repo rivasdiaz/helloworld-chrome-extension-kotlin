@@ -1,18 +1,22 @@
 ### Getting started sample Google Chrome / Mozilla Firefox extension
 
-Chrome Extension sample from Google's Getting Started guide.
-Modified to also support Mozilla Firefox.
+Based on Chrome Extension sample from Google's Getting Started guide.
 
 Documentation [here](https://developer.chrome.com/extensions/getstarted).
 
 This version of the code is as rewriting of the original Google example using Kotlin.
 The API has been extended using Kotlin Coroutines.
 The extension code has been modified to use coroutines APIs.
+The API was converted to use Browser Extensions W3C proposed standard.
 Original comments have been kept at the closest place of the original code.
 
-Original version in JavaScript can be seen [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/52fdf0db02fb636007d3cac652b593ebfc0d78c1).
+###### Previous versions of the extension
 
-Original rewrite in Kotlin can be seen [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/047baa8c4f5011fe9f28bac22e847c2113bd3dce).
+* Original version in JavaScript [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/52fdf0db02fb636007d3cac652b593ebfc0d78c1).
+* Initial rewrite in Kotlin [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/047baa8c4f5011fe9f28bac22e847c2113bd3dce).
+* Extension with Kotlin Coroutines only for Chrome [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/e42bff49b13f19f5e2e6a0d3d8c5995771f88df1).
+
+###### Medium articles
 
 Please check this series in Medium that describe this project:
 
