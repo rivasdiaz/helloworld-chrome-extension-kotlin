@@ -14,6 +14,12 @@ Original version in JavaScript can be seen [here](https://github.com/rivasdiaz/h
 
 Original rewrite in Kotlin can be seen [here](https://github.com/rivasdiaz/helloworld-chrome-extension-kotlin/tree/047baa8c4f5011fe9f28bac22e847c2113bd3dce).
 
+Please check this series in Medium that describe this project:
+
+1. [Writing a Chrome extension in Kotlin](https://medium.com/@rivasdiaz/writing-a-chrome-extension-in-kotlin-part-1-e013d431b63f)
+2. [Writing a Chrome extension in Kotlin — Using Coroutines](https://medium.com/@rivasdiaz/writing-a-chrome-extension-in-kotlin-using-coroutines-part-2-29175f4d1739)
+3. [Writing a Chrome extension in Kotlin — Supporting Firefox and Chrome](https://medium.com/@rivasdiaz/writing-a-chrome-extension-in-kotlin-supporting-firefox-and-chrome-part-3-a5ab0ae58bb4)
+
 ##### Building
 
 This project uses gradle. To build it, execute the following:
@@ -26,11 +32,11 @@ Unbundled extension will be generated inside `build/extension`.
 This folder can be used to install in Chrome.
 
 Zipped extension will be generated inside `build/distributions`.
-The zip inside can be used to install in Firefox.
+The zip generated inside that folder can be used to install in Firefox.
 
 ##### Installing the extension
 
-To install in Chrome:
+###### Google Chrome
 
 1. Go to Extensions
 2. Enable "Developer Mode"
@@ -44,6 +50,12 @@ If changes are made and the extension is recompiled, make sure to update the ext
 3. Click on "Update extensions now"
 
 Make sure to check Google documentation for more details.
+
+###### Mozilla Firefox
+
+The extension needs to be uploaded to Mozilla Add-ons website for the extension to work in Firefox.
+
+Please follow instructions [here](https://developer.mozilla.org/en-US/Add-ons/Distribution/Submitting_an_add-on).
 
 ##### Testing the extension
 
