@@ -1,9 +1,9 @@
-### Getting started sample Google Chrome extension
+### Getting started sample Google Chrome / Mozilla Firefox extension
 
 Chrome Extension sample from Google's Getting Started guide.
+Modified to also support Mozilla Firefox.
 
 Documentation [here](https://developer.chrome.com/extensions/getstarted).
-
 
 This version of the code is as rewriting of the original Google example using Kotlin.
 The API has been extended using Kotlin Coroutines.
@@ -23,6 +23,12 @@ gradlew clean assemble
 ```
 
 Unbundled extension will be generated inside `build/extension`.
+This folder can be used to install in Chrome.
+
+Zipped extension will be generated inside `build/distributions`.
+The zip inside can be used to install in Firefox.
+
+##### Installing the extension
 
 To install in Chrome:
 
@@ -41,7 +47,7 @@ Make sure to check Google documentation for more details.
 
 ##### Testing the extension
 
-Upon installation a a new extension is added to Chrome with the icon ![hello](src/main/web/icon.png "Getting started example")
+Upon installation a a new extension is added to Chrome/Firefox with the icon ![hello](src/main/web/icon.png "Getting started example")
 
 Clicking the icon will open a small popup that will allow changing active page background color.
 
