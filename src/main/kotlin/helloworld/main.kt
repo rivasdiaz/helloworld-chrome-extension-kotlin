@@ -2,6 +2,8 @@ package helloworld
 
 import browser.tabs.ExecuteScriptDetails
 import browser.tabs.QueryInfo
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.await
 import org.w3c.dom.HTMLSelectElement
 import kotlin.browser.document
 

@@ -1,7 +1,8 @@
 buildscript {
     ext {
-        kotlin_version = '1.2.0'
+        kotlin_version = '1.2.10'
         kotlin_frontend_version = '0.0.26'
+        kotlinx_coroutines_version = '0.21'
     }
 
     repositories {
@@ -24,6 +25,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinx_coroutines_version"
 }
 
 kotlin {
