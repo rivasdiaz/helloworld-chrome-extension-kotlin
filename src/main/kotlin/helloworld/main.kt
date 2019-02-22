@@ -2,8 +2,9 @@ package helloworld
 
 import browser.tabs.ExecuteScriptDetails
 import browser.tabs.QueryInfo
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.await
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.await
 import org.w3c.dom.HTMLSelectElement
 import kotlin.browser.document
 
@@ -14,7 +15,7 @@ import kotlin.browser.document
  *   is found.
  */
 fun getCurrentTabUrlAsync() =
-        async {
+        GlobalScope.async {
             // Query filter to be passed to browser.tabs.query - see
             // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/query
             val queryInfo = QueryInfo {
@@ -66,7 +67,7 @@ fun changeBackgroundColor(color: String) {
  *     the given url on success, or rejected if no color is retrieved.
  */
 fun getSavedBackgroundColorAsync(url: String) =
-        async {
+        GlobalScope.async {
             // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea.
             val items = browser.storage.sync.get(url).await()
             items[url] as? String
@@ -95,7 +96,7 @@ fun saveBackgroundColor(url: String, color: String) {
 // to a document's origin. Also, using browser.storage.sync instead of
 // browser.storage.local allows the extension data to be synced across multiple
 // user devices.
-fun main(args: Array<String>) {
+fun main() {
     document.onContentLoadedEventAsync {
         val url = getCurrentTabUrlAsync().await()
         val dropdown = document.getElementById("dropdown") as HTMLSelectElement
