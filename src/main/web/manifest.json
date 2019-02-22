@@ -3,7 +3,7 @@
 
   "name": "Getting started example",
   "description": "This extension allows the user to change the background color of the current page.",
-  "version": "1.0.1",
+  "version": "1.1.0",
 
   "browser_action": {
     "default_icon": "icon.png",
@@ -12,5 +12,6 @@
   "permissions": [
     "activeTab",
     "storage"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
