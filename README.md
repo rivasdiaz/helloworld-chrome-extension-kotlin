@@ -63,7 +63,7 @@ Please follow instructions [here](https://developer.mozilla.org/en-US/Add-ons/Di
 
 ##### Testing the extension
 
-Upon installation a a new extension is added to Chrome/Firefox with the icon ![hello](src/main/web/icon.png "Getting started example")
+Upon installation a a new extension is added to Chrome/Firefox with the icon ![hello](src/jsMain/web/icon.png "Getting started example")
 
 Clicking the icon will open a small popup that will allow changing active page background color.
 
