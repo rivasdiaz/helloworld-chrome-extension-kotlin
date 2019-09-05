@@ -2,8 +2,9 @@ package helloworld
 
 import browser.tabs.ExecuteScriptDetails
 import browser.tabs.QueryInfo
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.await
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.await
 import org.w3c.dom.HTMLSelectElement
 import kotlin.browser.document
 
@@ -14,30 +15,30 @@ import kotlin.browser.document
  *   is found.
  */
 fun getCurrentTabUrlAsync() =
-        async {
-            // Query filter to be passed to browser.tabs.query - see
-            // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/query
-            val queryInfo = QueryInfo {
-                active = true
-                currentWindow = true
-            }
-            val tabs = browser.tabs.query(queryInfo).await()
-            // browser.tabs.query invokes the callback with a list of tabs that match the
-            // query. When the popup is opened, there is certainly a window and at least
-            // one tab, so we can safely assume that |tabs| is a non-empty array.
-            // A window can only have one active tab at a time, so the array consists of
-            // exactly one tab.
-            val tab = tabs[0]
-
-            // A tab is a plain object that provides information about the tab.
-            // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/Tab
-            val url = tab.url
-            // tab.url is only available if the "activeTab" permission is declared.
-            // If you want to see the URL of other tabs (e.g. after removing active:true
-            // from |queryInfo|), then the "tabs" permission is required to see their
-            // "url" properties.
-            url ?: throw RuntimeException("tab.url should be a string")
+    GlobalScope.async {
+        // Query filter to be passed to browser.tabs.query - see
+        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/query
+        val queryInfo = QueryInfo {
+            active = true
+            currentWindow = true
         }
+        val tabs = browser.tabs.query(queryInfo).await()
+        // browser.tabs.query invokes the callback with a list of tabs that match the
+        // query. When the popup is opened, there is certainly a window and at least
+        // one tab, so we can safely assume that |tabs| is a non-empty array.
+        // A window can only have one active tab at a time, so the array consists of
+        // exactly one tab.
+        val tab = tabs[0]
+
+        // A tab is a plain object that provides information about the tab.
+        // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/Tab
+        val url = tab.url
+        // tab.url is only available if the "activeTab" permission is declared.
+        // If you want to see the URL of other tabs (e.g. after removing active:true
+        // from |queryInfo|), then the "tabs" permission is required to see their
+        // "url" properties.
+        url ?: throw RuntimeException("tab.url should be a string")
+    }
 
 /**
  * Change the background color of the current page.
@@ -52,9 +53,9 @@ fun changeBackgroundColor(color: String) {
     // is inserted into the active tab of the current window, which serves as the
     // default.
     browser.tabs.executeScript(
-            details = ExecuteScriptDetails {
-                code = script
-            }
+        details = ExecuteScriptDetails {
+            code = script
+        }
     )
 }
 
@@ -66,11 +67,11 @@ fun changeBackgroundColor(color: String) {
  *     the given url on success, or rejected if no color is retrieved.
  */
 fun getSavedBackgroundColorAsync(url: String) =
-        async {
-            // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea.
-            val items = browser.storage.sync.get(url).await()
-            items[url] as? String
-        }
+    GlobalScope.async {
+        // See https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/StorageArea.
+        val items = browser.storage.sync.get(url).await()
+        items[url] as? String
+    }
 
 /**
  * Sets the given background color for url.

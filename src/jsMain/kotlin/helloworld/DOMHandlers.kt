@@ -1,6 +1,7 @@
 package helloworld
 
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventTarget
 
@@ -8,7 +9,7 @@ inline fun EventTarget.onEvent(type: String, noinline listener: (Event) -> Unit)
         addEventListener(type, listener)
 
 inline fun EventTarget.onEventAsync(type: String, noinline listener: suspend (Event) -> Unit) =
-        onEvent(type = type, listener = { event: Event -> launch { listener(event) }})
+        onEvent(type = type, listener = { event: Event -> GlobalScope.launch { listener(event) }})
 
 
 inline fun EventTarget.onChangeEvent(noinline listener: (Event) -> Unit) =
